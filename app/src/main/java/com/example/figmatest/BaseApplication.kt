@@ -1,12 +1,9 @@
 package com.example.figmatest
 
 import android.app.Application
-import com.example.figmatest.data.ApiServices
-import com.example.figmatest.data.RetrofitInstance
 import com.example.figmatest.domein.GetListOfItemModelUseCase
 import com.example.figmatest.domein.Repository
 import com.example.figmatest.ui.ItemViewModel
-import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module

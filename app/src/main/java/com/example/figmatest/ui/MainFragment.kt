@@ -17,6 +17,7 @@ import com.example.figmatest.databinding.MainFragmentBinding
 import com.example.figmatest.domein.ItemModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
 class MainFragment : Fragment(), MainFragmentAdapter.ClickListner {
 
     private val viewModel: ItemViewModel by viewModel<ItemViewModel>()
@@ -41,14 +42,14 @@ class MainFragment : Fragment(), MainFragmentAdapter.ClickListner {
         }
     }
 
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
         if (Util.SDK_INT <= 23) {
             releasePlayer()
         }
     }
 
-    public override fun onStop() {
+    override fun onStop() {
         super.onStop()
         if (Util.SDK_INT > 23) {
             releasePlayer()
@@ -66,8 +67,8 @@ class MainFragment : Fragment(), MainFragmentAdapter.ClickListner {
     }
 
     private fun releasePlayer() {
-        player?.let { exoPlayer ->
-            exoPlayer.release()
+        player.let { exoPlayer ->
+            exoPlayer?.release()
         }
         player = null
     }
@@ -94,10 +95,10 @@ class MainFragment : Fragment(), MainFragmentAdapter.ClickListner {
         }
         binding.textView.setOnLongClickListener {
             it.setOnTouchListener { view, motionEvent ->
-                val minX = binding.videoView.x
-                val maxX = minX + binding.videoView.width
-                val minY = binding.videoView.y
-                val maxY = minX + binding.videoView.height
+                val minX = binding.cardView.x
+                val maxX = minX + binding.cardView.width
+                val minY = binding.cardView.y
+                val maxY = minY + binding.cardView.height
                 val x = motionEvent.x
                 val y = motionEvent.y
                 if (view.y + y >= minY && view.y + y + view.height <= maxY) {
@@ -107,6 +108,7 @@ class MainFragment : Fragment(), MainFragmentAdapter.ClickListner {
                     view.x += x
                 when (motionEvent.action) {
                     MotionEvent.ACTION_UP -> {
+                        view.performClick()
                         it.setOnTouchListener(null)
                     }
                 }
@@ -122,6 +124,9 @@ class MainFragment : Fragment(), MainFragmentAdapter.ClickListner {
                 player?.play()
             }
         })
+        viewModel.selected.observe(this.viewLifecycleOwner, { selected ->
+            selected.let { adapter.setSelectedVar(selected) }
+        })
     }
 
     override fun onClick(item: ItemModel) {
@@ -131,5 +136,6 @@ class MainFragment : Fragment(), MainFragmentAdapter.ClickListner {
             prepare()
             play()
         }
+        viewModel.setSelected(item)
     }
 }

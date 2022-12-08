@@ -13,6 +13,7 @@ class MainFragmentAdapter(val clickListner: ClickListner) :
     RecyclerView.Adapter<MainFragmentAdapter.MainFragmentViewHolder>() {
 
     var adapterList: List<ItemModel> = listOf()
+    var selected : ItemModel? = null
 
     class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemInRvBinding.bind(view)
@@ -28,6 +29,11 @@ class MainFragmentAdapter(val clickListner: ClickListner) :
         val item = adapterList[position]
         with(holder.binding) {
             smallPoster.load(item.poster)
+            if (item == selected){
+                smallPoster.alpha = 1f
+            } else {
+                smallPoster.alpha = 0.5f
+            }
             smallPoster.setOnClickListener {
                 clickListner.onClick(item)
             }
@@ -43,7 +49,14 @@ class MainFragmentAdapter(val clickListner: ClickListner) :
         notifyDataSetChanged()
     }
 
+    fun setSelectedVar(item: ItemModel){
+        selected = item
+        notifyDataSetChanged()
+    }
+
     interface ClickListner {
         fun onClick(item: ItemModel)
     }
+
+
 }
